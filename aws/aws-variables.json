@@ -1,0 +1,6 @@
+{
+    "aws_region"		: "us-east-1",
+    "ami_name"			: "VoltDB 9.0 Enterprise",
+    "voltdb_distrib_tar"	: "../../distributions/voltdb-ent-9.0.tar.gz",
+    "image_name"		: "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*"
+}

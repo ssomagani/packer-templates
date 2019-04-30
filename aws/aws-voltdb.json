@@ -1,0 +1,46 @@
+{
+  "variables": {
+    "aws_access_key"		: "",
+    "aws_secret_key"		: ""
+  },
+  "builders": [
+  {
+    "type"			: "amazon-ebs",
+    "access_key"		: "{{user `aws_access_key`}}",
+    "secret_key"		: "{{user `aws_secret_key`}}",
+    "region"			: "{{user `aws_region`}}",
+    "source_ami_filter"		: {
+      "filters"			: {
+        "virtualization-type"	: "hvm",
+        "name"			: "{{user `image_name`}}",
+        "root-device-type"	: "ebs"
+      },
+      "owners"			: ["099720109477"],
+      "most_recent"		: true
+    },
+    "instance_type"		: "t3.medium",
+    "ssh_username"		: "ubuntu",
+    "ami_name"			: "{{user `ami_name`}}"
+  }
+  ],
+  "provisioners": [
+         {  
+             "type"		: "ansible",
+             "playbook_file" : "./volt-ubuntu-dependencies.yml"
+         },
+          {
+             "type"		: "file",
+             "source"		: "{{user `voltdb_distrib_tar`}}",
+             "destination"	: "~/voltdb.tar.gz"
+          },
+          {
+             "type"		: "shell",
+             "inline"		: [
+             "sudo su -",
+             "tar -xzf ~/voltdb.tar.gz",
+             "sudo mv ~/voltdb-ent-* /opt/voltdb",
+             "echo 'export PATH=$PATH:/opt/voltdb/bin' >> /home/ubuntu/.profile"
+              ]
+         }
+      ]
+}
